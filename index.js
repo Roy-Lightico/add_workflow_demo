@@ -123,6 +123,7 @@ const addEsign = async (name, email, templateId, toPhone, toPhoneCoSigner) => {
         tenantId: process.env.tenant_Id,
       },
     });
+    ("tes");
     let esignId = eSgin.data.esignId;
     console.log("Got eSignId", esignId);
 
