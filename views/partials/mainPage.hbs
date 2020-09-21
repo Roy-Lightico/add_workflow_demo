@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Sign Up Form</title>
+
+    <!-- Font Icon -->
+    {{!-- <link rel="stylesheet" href="fonts/material-icon/css/material-design-iconic-font.min.css"> --}}
+    <script src="https://kit.fontawesome.com/72d9cea0ff.js" crossorigin="anonymous"></script>
+
+    <!-- Main css -->
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+
+    <div class="main">
+
+        <h1>Sign up</h1>
+        <div class="container">
+            <div class="sign-up-content">
+                <form method="POST" class="signup-form" action="http://localhost:3000/sign">
+                    {{!-- <h2 class="form-title">Lightico</h2> --}}
+                    <img src="/credits-logo.png" class="form-title" />
+                    <div class="form-radio">
+                        <input type="radio" name="action_type" value="Sequence" id="Sequence" checked="checked" />
+                        <label for="Sequence" id="Sequence">Sequence</label>
+                        <input type="radio" name="action_type" value="Parallel" id="Parallel" />
+                        <label for="Parallel" id="Parallel">Parallel</label>
+                    </div>
+                    <label for="template"></label>
+                    <input list="templates" name="template" id="template" placeholder="Choose a form template">
+                    <datalist id="templates">
+                        <option value="Demo1" label="Demo Multi-Signer 1" id="form1">
+                        <option value="Demo2" label="Demo From 2" id="form2">
+                    </datalist>
+                    <div>
+                        <h4>Signer Details</h4>
+                    </div>
+                    <div class="form-textbox">
+                        <label for="name"></label>
+                        <input type="text" name="name" id="name" placeholder="Full Name" />
+                    </div>
+                    <div class="form-textbox">
+                        <label for="email"> </label>
+                        <input type="email/text" name="contact_info" id="email" placeholder="Email / Phone Number" />
+                        <label class="switch" id="test">
+                            <input type="checkbox" name="toPhone" id="toPhone">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div>
+                        <h4>Co-Signer Details</h4>
+                    </div>
+                    <div class="form-textbox">
+                        <label for="name"></label>
+                        <input type="text" name="name" id="co_name" placeholder="Full Name" />
+                    </div>
+                    <div class="form-textbox">
+                        <label for="email"></label>
+                        <input type="email/text" name="contact_info" id="co_email" placeholder="Email / Phone Number" />
+                        <label class="switch" id="test">
+                            <input type="checkbox" name="toPhoneCoSigner" id="toPhoneCoSigner">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="form-textbox" id="submit-btn">
+                        <input type="submit" name="submit" id="submit" class="submit" value="Send" />
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JS -->
+
+    {{!-- <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="js/main.js"></script> --}}
+</body>
+
+</html>
