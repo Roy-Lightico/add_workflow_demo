@@ -31,15 +31,16 @@ const { body, validationResult } = require("express-validator");
 
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
-const editData = (customerEmail, customerName) => {
+const editData = (customerEmail, customer_name) => {
   data = {
     sourceName: "lightico",
     userName: "na1test@lightico.com",
     phoneNumber: customerEmail,
-    customerName: customerName,
+    customerName: customer_name,
     emailSubject: "You have an invitation from Lightico",
     sendNow: true,
     chatEnabled: true,
+    customerData: { customer_name },
   };
   return data;
 };
@@ -47,30 +48,33 @@ const editCoSignerData = (templateId, coSigner_Name, coSigner_Email) => {
   data = {
     templateId: templateId,
     participantId: 1,
+
     coSigners: [
       {
         participantId: 2,
         name: coSigner_Name,
         phoneNumber: coSigner_Email,
         orderGroupId: 1,
+        fields: { "co signer full name": coSigner_Name },
       },
     ],
   };
 
   return data;
 };
-const getSessionId = async (customerName, customerEmail, toPhone) => {
+const getSessionId = async (customer_name, customerEmail, toPhone) => {
   let data = {};
   toPhone === "on"
-    ? (data = editData(customerEmail, customerName))
+    ? (data = editData(customerEmail, customer_name))
     : (data = {
         sourceName: "lightico",
         userName: "na1test@lightico.com",
         email: customerEmail,
-        customerName: customerName,
+        customerName: customer_name,
         emailSubject: "You have an invitation from Lightico",
         sendNow: true,
         chatEnabled: true,
+        customerData: { customer_name },
       });
 
   try {
@@ -94,6 +98,7 @@ const getSessionId = async (customerName, customerEmail, toPhone) => {
 const addEsign = async (name, email, templateId, toPhone, toPhoneCoSigner) => {
   const [customerName, coSigner_Name] = name;
   const [customerEmail, coSigner_Email] = email;
+  // let cosigner_name = coSigner_Name;
   const phone = toPhone;
   const coSignerPhone = toPhoneCoSigner;
   let data = {};
@@ -108,6 +113,7 @@ const addEsign = async (name, email, templateId, toPhone, toPhoneCoSigner) => {
             name: coSigner_Name,
             email: coSigner_Email,
             orderGroupId: 1,
+            fields: { "co signer full name": coSigner_Name },
           },
         ],
       });
