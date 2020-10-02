@@ -19,26 +19,26 @@
 
     <div class="main">
 
-        <h1>Multi-Signer Demo</h1>
+        <h1>Workflow Demo</h1>
         <div class="container">
             <div class="sign-up-content">
-                <form method="POST" class="signup-form" action="http://localhost:3000/sign">
+                <form method="POST" class="signup-form" action="http://localhost:3000/submit">
                     {{!-- <h2 class="form-title">Lightico</h2> --}}
                     <img src="/credits-logo.png" class="form-title" />
-                    <div class="form-radio">
+                    {{!-- <div class="form-radio">
                         <input type="radio" name="action_type" value="Sequence" id="Sequence" checked="checked" />
                         <label for="Sequence" id="Sequence">Sequence</label>
                         <input type="radio" name="action_type" value="Parallel" id="Parallel" />
                         <label for="Parallel" id="Parallel">Parallel</label>
-                    </div>
-                    <label for="template"></label>
+                    </div> --}}
+                    {{!-- <label for="template"></label>
                     <input list="templates" name="template" id="template" placeholder="Choose a form template">
                     <datalist id="templates">
                         <option value="Demo1" label="Demo Multi-Signer 1" id="form1">
                         <option value="Demo2" label="Demo From 2" id="form2">
-                    </datalist>
+                    </datalist> --}}
                     <div>
-                        <h4>Signer Details</h4>
+                        <h4>Customer Details</h4>
                     </div>
                     <div class="form-textbox">
                         <label for="name"></label>
@@ -53,8 +53,35 @@
                         </label>
                     </div>
                     <div>
-                        <h4>Co-Signer Details</h4>
-                    </div>
+                        <h4>Add Forms To Workflow</h4>
+                        <div>
+                            <label class="check_container">Rental Agreement
+                                <input type="checkbox" class="inner" id="Rental_Agreement" name="templates_to_add"
+                                    value="Rental_Agreement">
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label class="check_container">Loan Terms
+                                <input type="checkbox" class="inner" id="Loan_Terms" name="templates_to_add"
+                                    value="Loan_Terms">
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label class="check_container">Purchase Agreement
+                                <input type="checkbox" class="inner" id="Purchase_Agreement" name="templates_to_add"
+                                    value="Purchase_Agreement">
+                                <span class="checkmark"></span>
+                            </label>
+
+                            <label class="check_container">Proof of financing
+                                <input type="checkbox" class="inner" id="Proof_of_financing" name="templates_to_add"
+                                    value="Proof_of_financing">
+                                <span class="checkmark"></span>
+                            </label>
+                        </div>
+
+
+                        {{!-- </div>
                     <div class="form-textbox">
                         <label for="name"></label>
                         <input type="text" name="name" id="co_name" placeholder="Full Name" />
@@ -66,10 +93,10 @@
                             <input type="checkbox" name="toPhoneCoSigner" id="toPhoneCoSigner">
                             <span class="slider round"></span>
                         </label>
-                    </div>
-                    <div class="form-textbox" id="submit-btn">
-                        <input type="submit" name="submit" id="submit" class="submit" value="Send" />
-                    </div>
+                    </div> --}}
+                        <div class="form-textbox" id="submit-btn">
+                            <input type="submit" name="submit" id="submit" class="submit" value="Send" />
+                        </div>
                 </form>
             </div>
         </div>
