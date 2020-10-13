@@ -38,24 +38,7 @@ const editData = (customerEmail, customer_name) => {
   };
   return data;
 };
-const editCoSignerData = (templateId, coSigner_Name, coSigner_Email) => {
-  data = {
-    templateId: templateId,
-    participantId: 1,
 
-    coSigners: [
-      {
-        participantId: 2,
-        name: coSigner_Name,
-        phoneNumber: coSigner_Email,
-        orderGroupId: 1,
-        fields: { "co signer full name": coSigner_Name },
-      },
-    ],
-  };
-
-  return data;
-};
 const getSessionId = async (customer_name, customerEmail, toPhone) => {
   let data = {};
   toPhone === "on"
@@ -238,3 +221,21 @@ app.listen(port, () => console.log(`App listening to port ${port}`));
     // } catch (error) {
     //   console.log("inside updateSessionError", error);
     // }
+    // const editCoSignerData = (templateId, coSigner_Name, coSigner_Email) => {
+    //   data = {
+    //     templateId: templateId,
+    //     participantId: 1,
+    
+    //     coSigners: [
+    //       {
+    //         participantId: 2,
+    //         name: coSigner_Name,
+    //         phoneNumber: coSigner_Email,
+    //         orderGroupId: 1,
+    //         fields: { "co signer full name": coSigner_Name },
+    //       },
+    //     ],
+    //   };
+    
+    //   return data;
+    // };
