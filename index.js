@@ -16,13 +16,7 @@ app.engine(
     defaultLayout: "planB",
     partialsDir: __dirname + "/views/partials/",
     helpers: {
-      ss: function (el) {
-        // let x = document.getElementById("test");
-        // console.log("inside helper", x);
-        // // let x = Document.getElementById("tests");
-        // console.log(el);
-        // return "hi";
-      },
+      ss: function (el) {},
     },
   })
 );
@@ -40,7 +34,7 @@ const editData = (customerEmail, customer_name) => {
     emailSubject: "You have an invitation from Lightico",
     sendNow: true,
     chatEnabled: true,
-    customerData: { customer_name },
+    customerData: { "name": customer_name },
   };
   return data;
 };
@@ -68,23 +62,28 @@ const getSessionId = async (customer_name, customerEmail, toPhone) => {
     ? (data = editData(customerEmail, customer_name))
     : (data = {
         sourceName: "lightico",
-        userName: "RoySandbox@lightico.com",
+        userName: "na1test@lightico.com",
         email: customerEmail,
         customerName: customer_name,
         emailSubject: "You have an invitation from Lightico",
-        sendNow: false,
+        sendNow: true,
         chatEnabled: true,
-        customerData: { customer_name },
+        customerData: { 
+          "web_email": customerEmail,
+          "name": customer_name,
+
+           },
       });
 
   try {
     let sessionID = await axios({
       method: "post",
-      url: "https://sandboxapi.lightico.com/v2.3/sessions",
+      url: "https://api.lightico.com/v2.3/sessions",
       data: data,
       headers: {
-        apiKey: process.env.api_Key,
-        tenantId: process.env.tenant_Id,
+        // apiKey: process.env.na1_api_key,
+        // tenantId: process.env.na1_tenantId,
+        Authorization: process.env.na1_access_token
       },
     });
     let ID = sessionID.data.sessionId;
@@ -96,23 +95,28 @@ const getSessionId = async (customer_name, customerEmail, toPhone) => {
 };
 const editEsignDocs = (templates, customerName) => {
   let tempID = {
-    Rental_Agreement: "c0508860-66b1-4bfd-b012-bd936ec462b2",
-    Loan_Terms: "9d7ef83c-137b-4768-8487-eea86a236eaf",
-    Purchase_Agreement: "87aa9176-3fe6-415e-8375-f3ed6471d4c2",
-    Proof_of_financing: "58a16337-104e-4c47-8d74-8d79f93c50ea",
+    Rental_Agreement: "bece8ea6-00b0-4adf-992e-32f2fad0f002",
+    Loan_Terms: "2f7cc844-d80a-4146-8cf6-720c367f9703",
+    Purchase_Agreement: "0cb6a9af-5c61-469b-9e72-886a3254404c",
+    Proof_of_financing: "d9ab22aa-3104-49f5-8631-78206b170563",
   };
   let esignDocuments = [];
-  templates.map((template) => {
-    console.log("before", template);
-    esignDocuments.push({
-      templateId: `${tempID[template]}`,
-      name: `${template}`,
-      fields: {
-        personal_first_name: `${customerName}`,
+  templates.map((template, index) => {
+    let idxNum = (index + 1)
+    esignDocuments.push(
+      {
+        step: index,
+        name: `This is step #${idxNum} of the workflow`,
+        documents: {
+          esignDocuments: [
+            {
+              templateId: tempID[template]
+            },
+          ],
+        },
       },
-    });
+    );
   });
-  // console.log("my esigndocs are.......", esignDocuments);
   return esignDocuments;
 };
 const addWorkflow = async (
@@ -121,104 +125,56 @@ const addWorkflow = async (
   phone,
   templates_to_add
 ) => {
-  let templates = {
-    Rental_Agreement: "c0508860-66b1-4bfd-b012-bd936ec462b2",
-    Loan_Terms: "9d7ef83c-137b-4768-8487-eea86a236eaf",
-    Purchase_Agreement: "87aa9176-3fe6-415e-8375-f3ed6471d4c2",
-    Proof_of_financing: "58a16337-104e-4c47-8d74-8d79f93c50ea",
-  };
-
   let workflowId = "cdcabcf0-ea0a-4a4f-b542-bb6022417cc8";
   let data = {};
   data = {
-    templateId: `${workflowId}`,
     name: "Workflow Test",
-    steps: [
-      {
-        step: 0,
-        name: "step 0 initiated",
-        documents: {
-          esignDocuments: editEsignDocs(templates_to_add, customerName),
-        },
-      },
-    ],
+    steps: editEsignDocs(templates_to_add)
   };
+  console.log("my new data, before sessionID", data)
   try {
-    // let accessToken = await axios({
-    //   method: 'post',
-    //   url: "https://sandboxapi.lightico.com/v2.3/services/oauth2/token",
-    //   headers: {
-    //     apiKey: process.env.api_Key,
-    //     tenantId: process.env.tenant_Id,
-    //   }
-    // })
     let sessionId = await getSessionId(customerName, customerEmail, phone);
-    let tempData = {
-      name: "nmmnmn",
-      steps: [
-        {
-          step: 0,
-          name: "Step 0 Name",
-          documents: {
-            esignDocuments: [
-              {
-                templateId: "87aa9176-3fe6-415e-8375-f3ed6471d4c2",
-                name: "yyy",
-                fields: {
-                  first_name: "Riley",
-                },
-              },
-              {
-                templateId: "58a16337-104e-4c47-8d74-8d79f93c50ea",
-              },
-            ],
-          },
+    try {
+      let workFlow = await axios({
+        method: "post",
+        url: `https://sandboxapi.lightico.com/v2.6/sessions/${sessionId}/workflows`,
+        data: data,
+        headers: {
+          Authorization: process.env.na1_access_token,
         },
-        {
-          step: 1,
-          name: "Step 1 Name",
-          documents: {
-            esignDocuments: [
-              {
-                templateId: "9d7ef83c-137b-4768-8487-eea86a236eaf",
-              },
-            ],
-          },
-        },
-      ],
-    };
-    let workFlow = await axios({
-      method: "post",
-      url: `https://sandboxapi.lightico.com/v2.6/sessions/${sessionId}/workflows`,
-      data: tempData,
-      headers: {
-        Authorization: process.env.access_token,
-      },
-    });
-    console.log("added workflow to session", workFlow);
-    let wfId = workFlow.data.workflowId;
-    console.log("Data before....", data);
-    let updateSession = await axios({
-      method: "patch",
-      url: `https://sandboxapi.lightico.com/V2.3/sessions/${sessionId}`,
-      data: {
-        sessionEnabled: true,
-        startSession: true,
-      },
-      headers: {
-        // apiKey: process.env.api_Key,
-        // tenantId: process.env.tenant_Id,
-        Authorization: process.env.access_token,
-      },
-    });
-    console.log(
-      "session started",
-      `${updateSession.status} : ${updateSession.statusText}`
-    );
-
-    return workFlow;
-  } catch (error) {}
+      });
+      console.log("added workflow to session", workFlow.data.workflowId);
+      let wfId = workFlow.data.workflowId;
+    } catch (error) {
+      console.log("Add Wrokflow Error", error);
+    }
+ 
+    return;
+  } catch (error) {
+    console.log("inside final error", error);
+  }
 };
+
+app.get("/", (req, res) => {
+  res.render("main", {
+    layout: "index",
+  });
+});
+
+app.post("/submit", (req, res) => {
+  const { name, contact_info, toPhone, templates_to_add } = req.body;
+  console.log("my Request", req.body);
+  try {
+    res.render("main", {
+      layout: "index",
+      api: addWorkflow(name, contact_info, toPhone, templates_to_add),
+    });
+  } catch (error) {
+    console.error("MY ERROR", error.response);
+  }
+});
+
+app.listen(port, () => console.log(`App listening to port ${port}`));
 
 // const addEsign = async (name, email, templateId, toPhone, toPhoneCoSigner) => {
 //   const [customerName, coSigner_Name] = name;
@@ -262,33 +218,23 @@ const addWorkflow = async (
 //     console.error("MY ERROR", error.response);
 //   }
 // };
-
-app.get("/", (req, res) => {
-  res.render("main", {
-    layout: "index",
-  });
-});
-
-app.post(
-  "/submit",
-  // [body("username").isEmail().escape()],
-
-  (req, res) => {
-    const { name, contact_info, toPhone, templates_to_add } = req.body;
-    // let templates = {
-    //   Demo1: "2f7cc844-d80a-4146-8cf6-720c367f9703",
-    //   Demo2: "d8f52ede-c60a-4fae-8fbc-ad848c63a8f0",
-    // };
-    console.log("my Request", req.body);
-    try {
-      res.render("main", {
-        layout: "index",
-        api: addWorkflow(name, contact_info, toPhone, templates_to_add),
-      });
-    } catch (error) {
-      console.error("MY ERROR", error.response);
-    }
-  }
-);
-
-app.listen(port, () => console.log(`App listening to port ${port}`));
+    // try {
+    //   console.log("inside update session");
+    //   let updateSession = await axios({
+    //     method: "patch",
+    //     url: `https://sandboxapi.lightico.com/V2.3/sessions/${sessionId}`,
+    //     data: {
+    //       sessionEnabled: true,
+    //       startSession: true,
+    //     },
+    //     headers: {
+    //       Authorization: process.env.access_token,
+    //     },
+    //   });
+    //   console.log(
+    //     "session started",
+    //     `${updateSession.status} : ${updateSession.statusText}`
+    //   );
+    // } catch (error) {
+    //   console.log("inside updateSessionError", error);
+    // }
